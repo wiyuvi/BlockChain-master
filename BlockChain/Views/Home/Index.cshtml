@@ -1,0 +1,189 @@
+﻿@using Entities.Dto
+@model List<Entities.Dto.PostDto>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index - Biz</title>
+    <link href="~/assets/css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+          crossorigin="anonymous" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- sidebar starts -->
+    <div class="sidebar">
+        <i class="fab fa-twitter"></i>
+        <a href="#home" onclick="getHash()">
+            <div class="sidebarOption active">
+                <span class="material-icons"> home </span>
+                <h2>Home</h2>
+            </div>
+        </a>
+        <a href="#notifications" onclick="getHash()">
+            <div class="sidebarOption">
+
+                <div>
+                    <span class="material-icons"> notifications_none </span>
+                    <div class="notificationDot"></div>
+                </div>
+                <h2>Notifications</h2>
+            </div>
+        </a>
+        <a href="/Account/Logout">
+            <div class="sidebarOption">
+                <span class="material-icons"> logout </span>
+                <h2>Log out</h2>
+            </div>
+        </a>
+
+
+        <a href="#postPopup"><button class="sidebar__tweet" style="cursor:pointer;">Post</button></a>
+    </div>
+    <!-- sidebar ends -->
+    <!-- feed starts -->
+    <div class="feed">
+        <!-- home starts -->
+        <section id="homePage">
+
+            <div class="feed__header">
+                <h2>Home</h2>
+            </div>
+            <!-- tweetbox starts -->
+            <div class="tweetBox">
+                <form method="post" action="/Home/AddPost">
+                    <div class="tweetbox__input">
+                        <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
+                        <textarea id="sendTweet" placeholder="What's happening?" name="Post"></textarea>
+                    </div>
+                    <button class="tweetBox__tweetButton" style="cursor:pointer;">Post</button>
+                </form>
+            </div>
+            <!-- tweetbox ends -->
+
+            @if (Model != null)
+            {
+                <!-- post starts -->
+                foreach (var item in Model)
+                {
+                    <!-- post starts -->
+                    <div class="post">
+                        <div class="post__avatar">
+                            <img src="./images/icons8-bell-64.png" alt="" />
+                        </div>
+
+                        <div class="post__body">
+                            <div class="post__header">
+                                <div class="post__headerText">
+                                    <h3>
+                                        @item.UserName
+                                    </h3>
+                                </div>
+                                <div class="post__headerDescription">
+                                    <p>@item.Post</p>
+                                </div>
+                                <div class="post__footer">
+                                    <span class="material-icons"> favorite_border </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- post ends -->
+                }
+                <!-- post ends -->
+            }
+
+        </section>
+        <!-- home ends -->
+        <!-- notification starts-->
+        <section id="notificationPage">
+            <div class="feed__header">
+                <h2>Notifications</h2>
+            </div>
+
+            <!-- post starts -->
+
+            @if (ViewBag.notifications != null)
+            {
+                foreach (NotificationDto notification in ViewBag.notifications)
+                {
+                    <div class="post">
+                        <div class="post__avatar">
+                            <img src=@notification.ProfilPhoto alt="" />
+                        </div>
+
+                        <div class="post__body">
+                            <div class="post__header">
+                                <div class="post__headerText">
+                                    <h3>
+                                        @notification.UserName
+                                    </h3>
+                                </div>
+                                <div class="post__headerDescription">
+                                    <p>@notification.Message</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+
+            @*<div class="post">
+            <div class="post__avatar">
+                <img src="./images/icons8-bell-64.png" alt="" />
+            </div>
+
+            <div class="post__body">
+                <div class="post__header">
+                    <div class="post__headerText">
+                        <h3>
+                            Username
+                        </h3>
+                    </div>
+                    <div class="post__headerDescription">
+                        <p>A new post from "username". Let's check it out!</p>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+            <!-- post ends -->
+        </section>
+        <!-- notification ends -->
+    </div>
+    <!-- feed ends -->
+    <!-- popup starts -->
+    <div id="postPopup" class="overlay">
+        <div class="popup">
+            <a href="#home"><span class="whiteIcon">&times;</span></a>
+            <div class="popupContent">
+                <div class="tweetBox">
+                    <form method="post" action="/Home/AddPost">
+                        <div class="tweetbox__input" style="padding:0; margin-top:20px;">
+                            <img src="https://i.pinimg.com/originals/a6/58/32/a65832155622ac173337874f02b218fb.png" alt="" />
+                            <textarea name="Post" id="sendTweet" placeholder="What's happening?"></textarea>
+                        </div>
+                        <button type="submit" class="tweetBox__tweetButton" style="margin-top:20px;">Post</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- popup ends -->
+    <script src="~/assets/js/app.js"></script>
+</body>
+
+</html>
